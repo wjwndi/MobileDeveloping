@@ -4,6 +4,7 @@ import android.graphics.BitmapFactory
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,12 +27,15 @@ import com.example.myapplication.ui.theme.MainRed
 import com.example.myapplication.utils.ListItem
 
 @Composable
-fun MainListItem(item: ListItem) {
+fun MainListItem(item: ListItem, onClick: (ListItem) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(20.dp, top = 100.dp, 20.dp)
-            .height(250.dp),
+            .height(250.dp)
+            .clickable {
+                onClick(item)
+            },
         shape = RoundedCornerShape(10.dp),
         border = BorderStroke(1.dp, MainRed)
     ) {
@@ -39,7 +43,10 @@ fun MainListItem(item: ListItem) {
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.BottomCenter
         ) {
-            AssetImage(imageName = item.imageName, contentDescription = item.title)
+            AssetImage(
+                imageName = item.imageName,
+                contentDescription = item.title,
+                modifier = Modifier.fillMaxSize())
             Text(
                 text = item.title,
                 modifier = Modifier
@@ -55,7 +62,7 @@ fun MainListItem(item: ListItem) {
 }
 
 @Composable
-fun AssetImage(imageName: String, contentDescription: String) {
+fun AssetImage(imageName: String, contentDescription: String, modifier: Modifier) {
     val context = LocalContext.current
     val assetManager = context.assets
     val inputString = assetManager.open(imageName)
@@ -63,7 +70,7 @@ fun AssetImage(imageName: String, contentDescription: String) {
     Image(
         bitmap = bitmap.asImageBitmap(),
         contentDescription = contentDescription,
-        modifier = Modifier.fillMaxSize(),
-        contentScale = ContentScale.Crop
+        contentScale = ContentScale.Crop,
+        modifier = modifier
     )
 }

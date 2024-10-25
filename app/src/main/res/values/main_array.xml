@@ -10,32 +10,32 @@
 
 
     <string-array name="mushrooms">
-        <item>Эноки|enoji_mushrooms.png</item>
-        <item>Тратомес разноцветный|tratemes_mushrooms.jpg</item>
+        <item>Эноки|enoji_mushrooms.png|enoji_mushrooms.html</item>
+        <item>Тратомес разноцветный|tratemes_mushrooms.jpg|tratemes_mushrooms.html</item>
     </string-array>
 
 
     <string-array name="medicinal_herbs">
-        <item>Лаванда|lavender_medicalherbs.jpg</item>
-        <item>Цикорий|chicory_medicalherbs.jpg</item>
+        <item>Лаванда|lavender_medicalherbs.jpg|lavender_medicalherbs.html</item>
+        <item>Цикорий|chicory_medicalherbs.jpg|chicory_medicalherbs.html</item>
     </string-array>
 
 
     <string-array name="trees">
-        <item>Сакура|sakura_trees.jpeg</item>
-        <item>Берёза|bereza_trees.jpg</item>
+        <item>Сакура|sakura_trees.jpeg|sakura_trees.html</item>
+        <item>Берёза|bereza_trees.jpg|bereza_trees.html</item>
     </string-array>
 
 
     <string-array name="fruits">
-        <item>Мандарин|tangerine_fruits.jpg</item>
-        <item>Апельсин|orange_fruits.jpg</item>
+        <item>Мандарин|tangerine_fruits.jpg|tangerine_fruits.html</item>
+        <item>Апельсин|orange_fruits.jpg|orange_fruits.html</item>
     </string-array>
 
 
     <string-array name="vegetables">
-        <item>Огурец|cucumber_vegetables.jpg</item>
-        <item>Тыква|pumpkin_vegetables.jpg</item>
+        <item>Огурец|cucumber_vegetables.jpg|cucumber_vegetables.html</item>
+        <item>Тыква|pumpkin_vegetables.jpg|pumpkin_vegetables.html</item>
     </string-array>
 
 </resources>
