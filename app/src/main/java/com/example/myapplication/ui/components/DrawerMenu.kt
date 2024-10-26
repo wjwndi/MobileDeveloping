@@ -1,6 +1,5 @@
 package com.example.myapplication.ui.components
 
-import android.media.metrics.Event
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -47,7 +46,7 @@ fun DrawerMenu(onEvent: (DrawerEvents) -> Unit) {
             modifier = Modifier.fillMaxSize()
         ) {
             Header()
-            Body(){event ->
+            Body{event ->
                 onEvent(event)
             }
         }
