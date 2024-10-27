@@ -66,6 +66,9 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.room.ktx)
 
+    implementation(libs.androidx.constraintlayout.compose)
+    //implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

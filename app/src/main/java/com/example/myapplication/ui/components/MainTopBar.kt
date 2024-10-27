@@ -14,11 +14,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.myapplication.MainViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainTopBar(title: String, drawerState: DrawerState) {
+fun MainTopBar(
+    title: String,
+    drawerState: DrawerState,
+    onFavClick: () -> Unit
+) {
     val scope = rememberCoroutineScope()
     TopAppBar(
         modifier = Modifier.background(Color.White),
@@ -41,7 +47,10 @@ fun MainTopBar(title: String, drawerState: DrawerState) {
             }
         },
         actions = {
-            IconButton(onClick = {})
+            IconButton(onClick = {
+                onFavClick()
+            }
+            )
             {
                 Icon(
                     imageVector = Icons.Default.Favorite,
