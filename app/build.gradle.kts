@@ -56,6 +56,7 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
 
     implementation(libs.androidx.lifecycle.extensions)
+    implementation(libs.androidx.constraintlayout)
     kapt(libs.androidx.lifecycle.compiler)
     implementation(libs.androidx.room.runtime)
     //noinspection KaptUsageInsteadOfKsp
@@ -67,7 +68,7 @@ dependencies {
     implementation(libs.androidx.room.ktx)
 
     implementation(libs.androidx.constraintlayout.compose)
-    //implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
+    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
