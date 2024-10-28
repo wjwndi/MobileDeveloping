@@ -2,7 +2,6 @@ package com.example.myapplication
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -15,24 +14,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import com.android.volley.Request
-import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
 import com.example.myapplication.data.WeatherModel
+import com.example.myapplication.data.WeatherApi
 import com.example.myapplication.scenes.DialogSearch
 import com.example.myapplication.scenes.MainCard
 import com.example.myapplication.scenes.TabLayout
 import com.example.myapplication.ui.theme.MyApplicationTheme
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.json.JSONObject
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
-const val API_KEY = "1bc852f12aed46a9a1d165600240610"
+const val API_KEY = "e9cca3373a794efe9e6135059242810"
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MyApplicationTheme {
-
                 val daysList = remember {
                     mutableStateOf(listOf<WeatherModel>())
                 }
@@ -49,7 +50,7 @@ class MainActivity : ComponentActivity() {
                             "",
                             "0.0",
                             "0.0",
-                            ""
+                            listOf()
                         )
                     )
                 }
@@ -91,30 +92,40 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+private fun getData(
+    city: String, context: Context,
+    daysList: MutableState<List<WeatherModel>>,
+    currentDay: MutableState<WeatherModel>
+) {
+    val retrofit: Retrofit = Retrofit.Builder()
+        .baseUrl("https://api.weatherapi.com/v1/")
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
 
-private fun getData(city: String, context: Context,
-                    daysList: MutableState<List<WeatherModel>>,
-                    currentDay: MutableState<WeatherModel>) {
-    val url = "https://api.weatherapi.com/v1/forecast.json" +
-            "?key=$API_KEY" +
-            "&q=$city" +
-            "&days=3&aqi=no&alerts=no&lang=ru"
-    val queue = Volley.newRequestQueue(context)
-    val stringRequest = StringRequest(
-        Request.Method.GET,
-        url,
-        { response ->
-            val resp = String(response.toByteArray(Charsets.ISO_8859_1), Charsets.UTF_8)
-            val list = getWeatherByDays(resp)
-            currentDay.value = list[0]
-            daysList.value = list
-            Log.d("MyLog", "Response $response")
-        },
-        { error ->
-            Log.d("MyLog", "VolleyError $error")
+    val service: WeatherApi = retrofit.create(WeatherApi::class.java)
+
+    val job = CoroutineScope(Dispatchers.IO).launch {
+        val weather = service.getWeather(city)
+
+        daysList.value = weather.forecast.forecastday.map { forecastDay ->
+            WeatherModel(
+                city = weather.location.name,
+                time = forecastDay.date,
+                currentTemp = "",
+                condition = forecastDay.day.condition.text,
+                icon = forecastDay.day.condition.icon,
+                maxTemp = forecastDay.day.maxTemp.toFloat().toInt().toString() + "°C",
+                minTemp = forecastDay.day.minTemp.toFloat().toInt().toString() + "°C",
+                hours = forecastDay.hour
+            )
         }
-    )
-    queue.add(stringRequest)
+
+        currentDay.value = daysList.value.first().copy(
+            time = weather.current.time,
+            currentTemp = weather.current.currentTemp.toFloat().toInt().toString() + "°C",
+        )
+    }
+    job
 }
 
 
@@ -147,7 +158,7 @@ private fun getWeatherByDays(response: String): List<WeatherModel> {
                 item.getJSONObject("day")
                     .getString("mintemp_c")
                     .toFloat().toInt().toString() + "°C",
-                item.getJSONArray("hour").toString()
+                listOf()
             )
         )
     }

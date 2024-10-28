@@ -29,13 +29,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.myapplication.R
+import com.example.myapplication.data.HourDto
 import com.example.myapplication.data.WeatherModel
 import com.example.myapplication.ui.theme.BlueLight
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
-import org.json.JSONArray
 import org.json.JSONObject
 
 @Composable
@@ -193,27 +193,67 @@ fun TabLayout(daysList: MutableState<List<WeatherModel>>, currentDay: MutableSta
     }
 }
 
-private fun getWeatherByHours(hours: String): List<WeatherModel>{
+private fun getWeatherByHours(hours: List<HourDto>): List<WeatherModel> {
     if (hours.isEmpty()) return listOf()
 
-    val hoursArray = JSONArray(hours)
     val list = ArrayList<WeatherModel>()
 
-    for (i in 0 until hoursArray.length()){
-        val item = hoursArray[i] as JSONObject
+    hours.forEach { item ->
+
         list.add(
             WeatherModel(
+                city = "",
+                time = item.time,
+                currentTemp = item.tempC.toFloat().toInt().toString() + "°C",
+                condition = item.condition.text,
+                icon = item.condition.icon,
+                maxTemp = "",
+                minTemp = "",
+                hours = listOf()
+            )
+        )
+
+    }
+    return list
+}
+private fun getWeatherByDays(response: String): List<WeatherModel> {
+    if (response.isEmpty()) return listOf()
+
+    val list = ArrayList<WeatherModel>()
+    val mainObject = JSONObject(response)
+    val city = mainObject.getJSONObject("location")
+        .getString("name")
+    val days = mainObject.getJSONObject("forecast")
+        .getJSONArray("forecastday")
+
+    for (i in 0 until days.length()) {
+        val item = days[i] as JSONObject
+        list.add(
+            WeatherModel(
+                city,
+                item.getString("date"),
                 "",
-                item.getString("time"),
-                item.getString("temp_c")
+                item.getJSONObject("day")
+                    .getJSONObject("condition")
+                    .getString("text"),
+                item.getJSONObject("day")
+                    .getJSONObject("condition")
+                    .getString("icon"),
+                item.getJSONObject("day")
+                    .getString("maxtemp_c")
                     .toFloat().toInt().toString() + "°C",
-                item.getJSONObject("condition").getString("text"),
-                item.getJSONObject("condition").getString("icon"),
-                "",
-                "",
-                ""
+                item.getJSONObject("day")
+                    .getString("mintemp_c")
+                    .toFloat().toInt().toString() + "°C",
+                listOf()
             )
         )
     }
+    list[0] = list[0].copy(
+        time = mainObject.getJSONObject("current")
+            .getString("last_updated"),
+        currentTemp = mainObject.getJSONObject("current")
+            .getString("temp_c")
+    )
     return list
 }
